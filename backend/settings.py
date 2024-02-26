@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
-    'employee.apps.EmployeeConfig'
+    'employee.apps.EmployeeConfig',
+    'apply_leave.apps.ApplyLeaveConfig'
 ]
 
 MIDDLEWARE = [
