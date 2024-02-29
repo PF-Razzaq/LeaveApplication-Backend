@@ -1,5 +1,8 @@
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view,permission_classes
+from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth import authenticate ,login,logout
+from .permissions import IsOwnerOrReadOnly
 from rest_framework import generics
 from rest_framework import status
 from .models import Employee,ApplyForLeave
@@ -13,6 +16,7 @@ class EmployeeDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
 @api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
 def employees_list(request, employee_id=None):
     if request.method == 'GET':
         if employee_id:            # Get data for a specific employee based on ID
@@ -98,3 +102,23 @@ def apply_leave_detail(request, pk):
         applyleave.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
+@api_view(['POST'])
+def login_view(request):
+    email = request.data.get('email')
+    password = request.data.get('password')
+    # user = authenticate(request, email=email, password=password)
+    
+    if email == email and password == password:
+        # login(request, user)
+        print('Name',password)
+        print('Name',email)
+        return Response({'access_token': 'Access Token'}, status=status.HTTP_200_OK)
+    else:
+        return Response({'error': 'Invalid Credential or role'}, status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def logout_view(request):
+    logout(request)
+    
+    return Response({'message','Logged out Successfully'}, status=status.HTTP_200_OK)

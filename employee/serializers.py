@@ -4,7 +4,7 @@ from .models import Employee,ApplyForLeave
 class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
-        fields = ('pk', 'first_name', 'last_name', 'email','password', 'birthday', 'department','role','employee_id')
+        fields = '__all__'
 
 
 class ApplyForLeaveSerializer(serializers.ModelSerializer):
