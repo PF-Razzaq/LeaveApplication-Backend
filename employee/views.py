@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view,permission_classes
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate ,login,logout
-from .permissions import IsOwnerOrReadOnly
+from rest_framework.authtoken.models import Token
 from rest_framework import generics
 from rest_framework import status
 from .models import Employee,ApplyForLeave
@@ -106,13 +106,14 @@ def apply_leave_detail(request, pk):
 def login_view(request):
     email = request.data.get('email')
     password = request.data.get('password')
-    # user = authenticate(request, email=email, password=password)
-    
-    if email == email and password == password:
-        # login(request, user)
-        print('Name',password)
-        print('Name',email)
-        return Response({'access_token': 'Access Token'}, status=status.HTTP_200_OK)
+    print('login1')
+    user = authenticate(request, username=email, password=password)
+
+    print('login2')
+    print(user)
+    if user is not None:
+        token = Token.objects.get_or_create(user=user)
+        return Response({'access_token': token.key}, status=status.HTTP_200_OK)
     else:
         return Response({'error': 'Invalid Credential or role'}, status=status.HTTP_401_UNAUTHORIZED)
 
