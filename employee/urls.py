@@ -1,5 +1,5 @@
 from django.urls import path, re_path
-from .views import EmployeeListCreateView,ApplyForLeaveListCreateView
+from .views import EmployeeListCreateView,ApplyForLeaveListCreateView,EmployeeDetailView
 from . import views
 
 urlpatterns = [
@@ -7,7 +7,7 @@ urlpatterns = [
     path('api/employees/', EmployeeListCreateView.as_view(), name='employee-list-create'),
     path('api/login/', views.login_view, name='login-view'),
     path('api/logout/', views.logout_view, name='logout-view'),
-    path('api/employees/<int:employee_id>', views.employees_list, name='employee-detail'),
+    path('api/employees/<int:pk>/', EmployeeDetailView.as_view(), name='employee-detail'),
     re_path(r'^api/employees/$', views.employees_list, name='employees-list'),
     re_path(r'^api/employees/([0-9]+)$', views.employees_detail, name='employees-detail'),
     
