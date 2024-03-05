@@ -74,6 +74,7 @@ class ApplyForLeaveDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 
 @api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
 def apply_leave_list(request):
     if request.method == 'GET':
         queryset = ApplyForLeave.objects.all()
@@ -88,14 +89,18 @@ def apply_leave_list(request):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['PUT', 'DELETE'])
+@api_view(['GET','PUT', 'DELETE'])
 def apply_leave_detail(request, pk):
     try:
         applyleave = ApplyForLeave.objects.get(pk=pk)
     except ApplyForLeave.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if request.method == 'PUT':
+    if request.method =='GET':
+        serializer = ApplyForLeaveSerializer(applyleave)
+        return Response(serializer.data)
+    
+    elif request.method == 'PUT':
         serializer = ApplyForLeaveSerializer(applyleave, data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()

@@ -10,4 +10,4 @@ class EmployeeSerializer(serializers.ModelSerializer):
 class ApplyForLeaveSerializer(serializers.ModelSerializer):
     class Meta:
         model=ApplyForLeave
-        fields = ('pk','start_date','end_date','leave_type','reason')
+        fields = '__all__'
