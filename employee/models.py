@@ -32,7 +32,7 @@ class ApplyForLeave(models.Model):
     leave_type = models.TextField(max_length=30)
     reason = models.TextField(max_length=30)
     status = models.IntegerField(choices=STATUS_CHOICES, default=PENDING) 
-    days = models.IntegerField(default=0)  # Corrected field name
+    days = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         days = sum(
