@@ -132,3 +132,16 @@ def logout_view(request):
     logout(request)
     
     return Response({'message','Logged out Successfully'}, status=status.HTTP_200_OK)
+
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+def apply_leave_status(request, pk):
+    if request.method == 'GET':
+        leave_instance = ApplyForLeave.objects.get(pk=pk)
+        serializer = ApplyForLeaveSerializer(leave_instance, context={'request': request})
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        leave_instance = ApplyForLeave.objects.get(pk=pk)
+        leave_instance.status = 1
+        leave_instance.save()
+        return Response({'message': 'Leave status updated successfully.'})
