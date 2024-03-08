@@ -1,6 +1,5 @@
 from django.db import models
 from datetime import timedelta
-from django.contrib.auth.models import AbstractUser
 
 
 class Employee(models.Model):
@@ -18,6 +17,8 @@ class Employee(models.Model):
         return f"{self.first_name} {self.last_name}"
 
 class ApplyForLeave(models.Model):
+
+
     PENDING = 0
     APPROVED = 1
     REJECTED = 2
@@ -33,6 +34,7 @@ class ApplyForLeave(models.Model):
     reason = models.TextField(max_length=30)
     status = models.IntegerField(choices=STATUS_CHOICES, default=PENDING) 
     days = models.IntegerField(default=0)
+    reject_reason = models.TextField(default='') 
 
     def save(self, *args, **kwargs):
         days = sum(
@@ -43,7 +45,6 @@ class ApplyForLeave(models.Model):
         self.days = days
 
         super(ApplyForLeave, self).save(*args, **kwargs)
-
 
     def __str__(self):
         return f"{self.leave_type} {self.reason}"
