@@ -77,7 +77,8 @@ class ApplyForLeaveDetailView(generics.RetrieveUpdateDestroyAPIView):
 @permission_classes([IsAuthenticated])
 def apply_leave_list(request):
     if request.method == 'GET':
-        queryset = ApplyForLeave.objects.all()
+        employee_id = request.user.employee.employee_id
+        queryset = ApplyForLeave.objects.filter(employee__employee_id=employee_id)
         serializer = ApplyForLeaveSerializer(queryset, context={'request': request}, many=True)
         return Response(serializer.data)
 

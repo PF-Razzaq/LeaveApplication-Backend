@@ -28,6 +28,7 @@ class ApplyForLeave(models.Model):
         (APPROVED, 'Approved'),
         (REJECTED, 'Rejected'),
     ]
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True,blank=True)
     start_date = models.DateField()
     end_date = models.DateField()
     leave_type = models.TextField(max_length=30)
