@@ -3,6 +3,7 @@ from datetime import timedelta
 
 
 class Employee(models.Model):
+    
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
@@ -10,7 +11,6 @@ class Employee(models.Model):
     birthday = models.DateField()
     department = models.CharField(max_length=100)
     role = models.CharField(max_length=100)
-    employee_id = models.CharField(max_length=100)
 
 
     def __str__(self):

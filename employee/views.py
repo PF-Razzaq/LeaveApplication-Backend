@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from rest_framework.decorators import api_view,permission_classes
+from rest_framework.decorators import api_view,permission_classes,authentication_classes
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate ,login,logout
 from rest_framework.authtoken.models import Token
@@ -75,10 +75,10 @@ class ApplyForLeaveDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
-def apply_leave_list(request):
+def apply_leave_list(request,id):
     if request.method == 'GET':
-        employee_id = request.user.employee.employee_id
-        queryset = ApplyForLeave.objects.filter(employee__employee_id=employee_id)
+        queryset = ApplyForLeave.objects.filter(employee__id=id)
+        print('queryset',queryset)
         serializer = ApplyForLeaveSerializer(queryset, context={'request': request}, many=True)
         return Response(serializer.data)
 

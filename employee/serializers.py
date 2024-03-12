@@ -8,6 +8,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
 
 class ApplyForLeaveSerializer(serializers.ModelSerializer):
+    employee = EmployeeSerializer()
     class Meta:
         model=ApplyForLeave
         fields = '__all__'

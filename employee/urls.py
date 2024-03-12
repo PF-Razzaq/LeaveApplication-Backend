@@ -14,6 +14,7 @@ urlpatterns = [
     # for apply leave
     path('api/leave/', ApplyForLeaveListCreateView.as_view(), name='apply-list-create'),
     re_path(r'^api/leave/$', views.apply_leave_list, name='apply_leave_list'),
+    re_path(r'^api/leave/<int:employee_id>/', views.apply_leave_list, name='apply_leave_list-employee'),
     re_path(r'^api/leave/([0-9]+)$', views.apply_leave_detail, name='apply_leave_detail'),
 
 ]
