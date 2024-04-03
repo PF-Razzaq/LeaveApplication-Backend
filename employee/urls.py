@@ -17,4 +17,10 @@ urlpatterns = [
     re_path(r'^api/leave/<int:employee_id>/', views.apply_leave_list, name='apply_leave_list-employee'),
     re_path(r'^api/leave/([0-9]+)$', views.apply_leave_detail, name='apply_leave_detail'),
 
+    # For LEAVE TABLE
+
+    path('api/leavetable/',views.leave_table_view, name='leave-table-view'),
+    path('api/leavetableupdate/',views.leave_table_update, name='leave-table-update-view'),
+    path('api/getemployeeleave/$',views.get_employee_leave, name='get-employee-leave')
+
 ]

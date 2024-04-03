@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate ,login,logout
 from rest_framework.authtoken.models import Token
 from rest_framework import generics
 from rest_framework import status
-from .models import Employee,ApplyForLeave
+from .models import Employee,ApplyForLeave,LeaveTable
 from .serializers import *
 
 class EmployeeListCreateView(generics.ListCreateAPIView):
@@ -115,11 +115,9 @@ def apply_leave_detail(request, pk):
 def login_view(request):
     email = request.data.get('email')
     password = request.data.get('password')
-    print('login1')
     user = authenticate(request, username=email, password=password)
 
-    print('login2')
-    print(user)
+
     if user is not None:
         token = Token.objects.get_or_create(user=user)
         return Response({'access_token': token.key}, status=status.HTTP_200_OK)
@@ -145,3 +143,59 @@ def apply_leave_status(request, pk):
         leave_instance.status = 1
         leave_instance.save()
         return Response({'message': 'Leave status updated successfully.'})
+    
+@api_view(['GET'])
+def leave_table_view(request):
+    if request.method == 'GET':
+        try:
+            leave_table = LeaveTable.objects.first()
+            data = {
+                'total_leave': leave_table.total_leave,
+                'approved_days': leave_table.approved_days,
+                'pending_leaves': leave_table.pending_leaves,
+            }
+            return Response(data)
+        except LeaveTable.DoesNotExist:
+            return Response({'error: Leave table does not exist'},status=404)
+        
+@api_view(['POST'])
+def leave_table_update(request):
+    if request.method == 'POST':
+        approved_days = request.data.get('approved_days')
+        try:
+            leave_table = LeaveTable.objects.first()
+            if leave_table:
+                leave_table.approved_days = approved_days
+                leave_table.save()
+                return Response({'message': 'Leave table updated successfully'})
+            else:
+                return Response({'error': 'No leave table records found'}, status=404)
+        except Exception as e:
+            return Response({'error': str(e)}, status=500)
+        
+
+@api_view(['GET'])
+def get_employee_leave(request, employee_id):
+    try:
+        # Retrieve the employee object
+        employee = get_object_or_404(Employee, id=employee_id)
+        
+        # Retrieve the associated LeaveTable instance for the employee
+        leave_table = employee.leave_table
+        
+        # Retrieve the leaves associated with the LeaveTable id
+        leaves = ApplyForLeave.objects.filter(leave_table_id=leave_table.id)
+        
+        # Serialize the leaves data as needed and return
+        # This depends on your serializer implementation
+        # For simplicity, returning a dictionary representation
+        serialized_leaves = [{'leave_type': leave.leave_type, 'days': leave.days} for leave in leaves]
+        
+        return Response(serialized_leaves)
+    
+    except Employee.DoesNotExist:
+        return Response({'error': 'Employee not found'}, status=404)
+    except LeaveTable.DoesNotExist:
+        return Response({'error': 'LeaveTable not found for the employee'}, status=404)
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
