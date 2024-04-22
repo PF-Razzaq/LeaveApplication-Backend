@@ -21,6 +21,6 @@ urlpatterns = [
 
     path('api/leavetable/',views.leave_table_view, name='leave-table-view'),
     path('api/leavetableupdate/',views.leave_table_update, name='leave-table-update-view'),
-    path('api/getemployeeleave/$',views.get_employee_leave, name='get-employee-leave')
+    path('api/getemployeeleave/',views.get_employee_leave, name='get-employee-leave')
 
 ]
